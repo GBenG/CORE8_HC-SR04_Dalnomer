@@ -69,10 +69,10 @@ CLEAR
 
 	PRINT	0x2D	;[-]
 	PRINT	0x20	;[]
-	PRINT	0x43	;[С]
-	PRINT	0xAB	;[Ч]
-	PRINT	0x45	;[E]
-	PRINT	0x54	;[Т]
+	PRINT	0xE0	;[Д] E3
+	PRINT	0x61	;[А]
+	PRINT	0xBB	;[Л]
+	PRINT	0xC4	;[Ь]
 	PRINT	0x20	;[]
 	PRINT	0x2D	;[-]
 
@@ -87,12 +87,14 @@ CLEAR
 	PRINT	0x5F	;[_]
 	PRINT	0x5F	;[_]
 	PRINT	0x20	;[]
-	PRINT	0x20	;[]
-	PRINT	0x20	;[]
+	PRINT	0x63	;[c]
+	PRINT	0xBC	;[m]
 
 /////////////////////////////////////////////////////////////////////
 	
 	CLR		cBUF
+	CLR		COUNT2
+	CLR		COUNT3
 
 while1:
 
@@ -128,9 +130,30 @@ outd:
 	LDI	R16,(0<<CS01)	;
 	OUT	TCCR0, R16		; Инициализация таймера
 
+	INC	cBUF
+
+	ADD	COUNT3,cBUF
+
+	INC	COUNT2
+	CPI	COUNT2,4
+	BREQ	outsr
+	RJMP 	while1
+
+
+outsr:
+
+	MOV	cBUF,COUNT3
+
+
+	LSR	cBUF
+//	LSR	cBUF
+
 	RCALL 	OUT_CIK		; вывод значений переменной
 
-	DDLOOP 3,255,255
+	CLR		COUNT2
+	CLR		COUNT3
+
+	DDLOOP 10,255,255
 
 
 RJMP while1
